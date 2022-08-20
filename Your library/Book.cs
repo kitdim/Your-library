@@ -2,8 +2,9 @@
 {
     class Book
     {
-        private static int Id = 1; // TODO сделать увеличение id после создание каждого экземпляра
+        private static int id = 1;
 
+        public int Id { get; set; }
         public string Genre { get; set; }
         public string BookTitle { get; set; }
         public string Autor { get; set; }
@@ -16,7 +17,7 @@
             BookTitle = bookTitle;
             Autor = autor;
             Pages = page;
-            Id = GetId();
+            Id = id++;
         }
         public Book() { }
 
@@ -24,7 +25,5 @@
         {
             return $"{Id}.Жанр:{Genre}|Название книги:{BookTitle}|Автор:{Autor}|Количество страниц:{Pages} стр.";
         }
-
-        private int GetId() { return Id++; }
     }
 }
