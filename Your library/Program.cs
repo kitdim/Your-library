@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Runtime.Serialization.Json;
+using System.Text.Json;
 
 namespace Your_library
 {
@@ -14,18 +15,32 @@ namespace Your_library
                 Console.WriteLine("Успешно!\n" +
                                   "Для выхода нажми 'q'");
 
-                if (Console.ReadKey().KeyChar == 'q' || Console.ReadKey().KeyChar == 'й') { Console.Clear(); break; }
+                if (Console.ReadKey().KeyChar.ToString().ToLower() == "q")
+                {
+                    Console.Clear(); break;
+                }
                 Console.Clear();
+            }
+            var jsBook = new DataContractJsonSerializer(typeof(List<Book>));
+            using (var file = new FileStream("mybooks.json", FileMode.OpenOrCreate))
+            {
+                jsBook.WriteObject(file,myBooks);
             }
 
             Console.WriteLine("Список книг:");
-            foreach (var item in myBooks)
+            using (var file = new FileStream("mybooks.json", FileMode.OpenOrCreate))
             {
-                Console.WriteLine(item);
+                var books = jsBook.ReadObject(file) as List<Book>;
+                if (books != null)
+                {
+                    foreach (var book in books)
+                    {
+                        Console.WriteLine(book);
+                    }
+                }
             }
             Console.ReadKey();
         }
-
         private static Book InsertBook()
         {
             Console.WriteLine("Процесс добавления книги:");
@@ -49,24 +64,7 @@ namespace Your_library
                 page = number;
 
             var mybook = new Book(genre,title,autor,page);
-            //WriteBookToJson(mybook);
             return mybook;
         }
-
-        //private async static void WriteBookToJson(Book book)
-        //{
-        //    using (FileStream fs = new FileStream("myliblary.json", FileMode.OpenOrCreate))
-        //    {
-        //        await JsonSerializer.SerializeAsync<Book>(fs, book);
-        //        Console.WriteLine("Data has been saved to file");
-        //    }
-
-        //   // чтение данных
-        //    using (FileStream fs = new FileStream("myliblary.json", FileMode.OpenOrCreate))
-        //    {
-        //        Book book1 = await JsonSerializer.DeserializeAsync<Book>(fs);
-        //        Console.WriteLine(book1);
-        //    }
-        //}
     }
 }
