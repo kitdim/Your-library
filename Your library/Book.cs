@@ -1,5 +1,6 @@
 ﻿namespace Your_library
 {
+    [Serializable]
     class Book
     {
         private static int id = 1;
